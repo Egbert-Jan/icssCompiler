@@ -1,5 +1,6 @@
 package nl.han.ica.icss;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.checker.Checker;
 import nl.han.ica.icss.checker.SemanticError;
@@ -71,6 +72,9 @@ public class Pipeline implements ANTLRErrorListener {
             walker.walk(listener, parseTree);
 
             this.ast = listener.getAST();
+
+            System.out.println("HIERISMIJNPRINT");
+            System.out.println(this.ast.toString());
 
         } catch (RecognitionException e) {
             this.ast = new AST();

@@ -40,13 +40,18 @@ class ParserTest {
 		parser.removeErrorListeners();
 		parser.addErrorListener(errorListener);
 
+		System.out.println("befor listener");
 		//Parse & extract AST
  		ASTListener listener = new ASTListener();
 		try {
+			System.out.println("In try");
 			ParseTree parseTree = parser.stylesheet();
+			System.out.println("broooo");
+			System.out.println(parseTree.toStringTree());
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(listener, parseTree);
 		} catch(ParseCancellationException e) {
+			System.out.println("in catch");
 			fail(errorListener.toString());
 		}
 
@@ -55,7 +60,7 @@ class ParserTest {
 
 	@Test
 	void testParseLevel0() throws IOException {
-
+		System.out.println("testParseLevel0");
 		AST sut = parseTestFile("level0.icss");
 		AST exp = Fixtures.uncheckedLevel0();
 		assertEquals(exp,sut);

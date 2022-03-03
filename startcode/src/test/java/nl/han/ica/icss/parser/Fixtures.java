@@ -24,9 +24,11 @@ public class Fixtures {
 		stylesheet.addChild((new Stylerule())
 				.addChild(new TagSelector("p"))
 				.addChild((new Declaration("background-color"))
-                        .addChild(new ColorLiteral("#ffffff")))
+						.addChild(new ColorLiteral("#ffffff"))
+				)
 				.addChild((new Declaration("width"))
-						.addChild(new PixelLiteral("500px")))
+						.addChild(new PixelLiteral("500px"))
+				)
 		);
 		/*
 		a {
@@ -36,7 +38,8 @@ public class Fixtures {
 		stylesheet.addChild((new Stylerule())
 				.addChild(new TagSelector("a"))
 				.addChild((new Declaration("color"))
-						.addChild(new ColorLiteral("#ff0000")))
+						.addChild(new ColorLiteral("#ff0000"))
+				)
 		);
 		/*
 		#menu {
@@ -46,7 +49,8 @@ public class Fixtures {
 		stylesheet.addChild((new Stylerule())
 				.addChild(new IdSelector("#menu"))
 				.addChild((new Declaration("width"))
-						.addChild(new PixelLiteral("520px")))
+						.addChild(new PixelLiteral("520px"))
+				)
 		);
 		/*
 		.menu {
@@ -56,7 +60,8 @@ public class Fixtures {
 		stylesheet.addChild((new Stylerule())
 				.addChild(new ClassSelector(".menu"))
 				.addChild((new Declaration("color"))
-						.addChild(new ColorLiteral("#000000")))
+						.addChild(new ColorLiteral("#000000"))
+				)
 		);
 
         return new AST(stylesheet);
