@@ -67,6 +67,16 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitDecleration(ICSSParser.DeclerationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ICSSParser#booleanLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterBooleanLiteral(ICSSParser.BooleanLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#booleanLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitBooleanLiteral(ICSSParser.BooleanLiteralContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ICSSParser#pixelLiteral}.
 	 * @param ctx the parse tree
 	 */
@@ -86,4 +96,34 @@ public interface ICSSListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitColorLiteral(ICSSParser.ColorLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ICSSParser#variableName}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableName(ICSSParser.VariableNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#variableName}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableName(ICSSParser.VariableNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ICSSParser#variableValue}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableValue(ICSSParser.VariableValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#variableValue}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableValue(ICSSParser.VariableValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ICSSParser#variable}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariable(ICSSParser.VariableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#variable}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariable(ICSSParser.VariableContext ctx);
 }

@@ -46,26 +46,45 @@ ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
 //stylesheet: EOF;
-stylesheet: object+;
+stylesheet: variable* object*;
 selector: LOWER_IDENT | CLASS_IDENT | ID_IDENT;
 object: selector OPEN_BRACE decleration+ CLOSE_BRACE;
 
 key: LOWER_IDENT COLON;
-value: pixelLiteral | colorLiteral;
+value: pixelLiteral | colorLiteral | booleanLiteral | variableName;
 decleration: key value SEMICOLON;
 
+//variableLiteral: CAPITAL_IDENT;
+booleanLiteral: TRUE | FALSE;
 pixelLiteral: PIXELSIZE;
 colorLiteral: COLOR;
 
+variableName: CAPITAL_IDENT;
+variableValue: value;
+variable: variableName ASSIGNMENT_OPERATOR variableValue SEMICOLON;
 
-//stylesheet: object+;
-//object: selector OPEN_BRACE decleration+ CLOSE_BRACE;
-//selector: LOWER_IDENT | CLASS_IDENT | ID_IDENT;
+
+//LinkColor := #ff0000;
+//ParWidth := 500px;
+//AdjustColor := TRUE;
+//UseLinkColor := FALSE;
 //
-//decleration: key value SEMICOLON;
-//key: LOWER_IDENT COLON;
-//value: PIXELSIZE | COLOR;
-
+//p {
+//	background-color: #ffffff;
+//	width: ParWidth;
+//}
+//
+//a {
+//	color: LinkColor;
+//}
+//
+//#menu {
+//	width: 520px;
+//}
+//
+//.menu {
+//	color: #000000;
+//}
 
 
 

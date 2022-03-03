@@ -134,8 +134,38 @@ public class ASTListener extends ICSSBaseListener {
 		popAndAddChild();
 	}
 
+	@Override
+	public void enterBooleanLiteral(ICSSParser.BooleanLiteralContext ctx) {
+		currentContainer.push(new BoolLiteral(ctx.getText()));
+	}
 
-//	@Override
+	@Override
+	public void exitBooleanLiteral(ICSSParser.BooleanLiteralContext ctx) {
+		popAndAddChild();
+	}
+
+	@Override
+	public void enterVariable(ICSSParser.VariableContext ctx) {
+		currentContainer.push(new VariableAssignment());
+	}
+
+	@Override
+	public void exitVariable(ICSSParser.VariableContext ctx) {
+		popAndAddChild();
+	}
+
+	@Override
+	public void enterVariableName(ICSSParser.VariableNameContext ctx) {
+		currentContainer.push(new VariableReference(ctx.getText()));
+	}
+
+	@Override
+	public void exitVariableName(ICSSParser.VariableNameContext ctx) {
+		popAndAddChild();
+	}
+
+
+	//	@Override
 //	public void exitEveryRule(ParserRuleContext ctx) {
 //		popAndAddChild();
 //	}
