@@ -1,7 +1,5 @@
 package nl.han.ica.icss.parser;
 
-import java.util.Stack;
-
 
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.datastructures.impl.HanStack;
@@ -13,7 +11,6 @@ import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class extracts the ICSS Abstract Syntax Tree from the Antlr Parse tree.
@@ -38,13 +35,11 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
-		System.out.println("enterStylesheet");
 		currentContainer.push(new Stylesheet());
 	}
 
 	@Override
 	public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
-		System.out.println("exitStylesheet");
 		//Check if it's stylesheet??
 		var stylesheet = (Stylesheet) currentContainer.pop();
 		ast.setRoot(stylesheet);
@@ -52,7 +47,6 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterSelector(ICSSParser.SelectorContext ctx) {
-		System.out.println("enterSelector");
 		char beginChar = ctx.getText().charAt(0);
 
 		if (beginChar == '#') {
@@ -66,72 +60,61 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitSelector(ICSSParser.SelectorContext ctx) {
-		System.out.println("exitSelector");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
 	public void enterObject(ICSSParser.ObjectContext ctx) {
-		System.out.println("enterObject");
 		currentContainer.push(new Stylerule());
 	}
 
 	@Override
 	public void exitObject(ICSSParser.ObjectContext ctx) {
-		System.out.println("exitObject");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
 	public void enterDecleration(ICSSParser.DeclerationContext ctx) {
-		System.out.println("enterDecleration");
 		currentContainer.push(new Declaration());
 	}
 
 	@Override
 	public void exitDecleration(ICSSParser.DeclerationContext ctx) {
-		System.out.println("exitDecleration");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
 	public void enterKey(ICSSParser.KeyContext ctx) {
-		System.out.println("enterKey:" + ctx.getText());
 		currentContainer.push(new PropertyName(ctx.getText()));
 	}
 
 	@Override
 	public void exitKey(ICSSParser.KeyContext ctx) {
-		System.out.println("exitKey");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
-	@Override
-	public void enterValue(ICSSParser.ValueContext ctx) { }
+	@Override public void enterValue(ICSSParser.ValueContext ctx) { }
+	@Override public void exitValue(ICSSParser.ValueContext ctx) { }
 
 	@Override
 	public void enterColorLiteral(ICSSParser.ColorLiteralContext ctx) {
-		System.out.println("enterColorLiteral");
 		currentContainer.push(new ColorLiteral(ctx.getText()));
 	}
 
 	@Override
 	public void exitColorLiteral(ICSSParser.ColorLiteralContext ctx) {
-		System.out.println("exitColorLiteral");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
 	public void enterPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
-		System.out.println("enterPixelLiteral");
 		// the px gets removed in the constructor
 		currentContainer.push(new PixelLiteral(ctx.getText()));
 	}
 
 	@Override
 	public void exitPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
-		System.out.println("exitPixelLiteral");
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
@@ -141,7 +124,27 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitBooleanLiteral(ICSSParser.BooleanLiteralContext ctx) {
-		popAndAddChild();
+		popAndAddAsChild();
+	}
+
+	@Override
+	public void enterPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
+		currentContainer.push(new PercentageLiteral(ctx.getText()));
+	}
+
+	@Override
+	public void exitPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
+		popAndAddAsChild();
+	}
+
+	@Override
+	public void enterScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
+		currentContainer.push(new ScalarLiteral(ctx.getText()));
+	}
+
+	@Override
+	public void exitScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
+		popAndAddAsChild();
 	}
 
 	@Override
@@ -151,7 +154,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitVariable(ICSSParser.VariableContext ctx) {
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
 	@Override
@@ -161,16 +164,49 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitVariableName(ICSSParser.VariableNameContext ctx) {
-		popAndAddChild();
+		popAndAddAsChild();
 	}
 
+	@Override
+	public void enterExpression(ICSSParser.ExpressionContext ctx) {
+		// This logic needs to be here because we need to check if the
+		// expression has operations. If so we add the operation.
+		if(ctx.addOperation() != null) {
+			currentContainer.push(new AddOperation());
+		} else if(ctx.subtractOperation() != null) {
+			currentContainer.push(new SubtractOperation());
+		} else if(ctx.multiplyOperation() != null) {
+			currentContainer.push(new MultiplyOperation());
+		}
+	}
 
-	//	@Override
+	@Override
+	public void exitExpression(ICSSParser.ExpressionContext ctx) {
+		// If it's an expression with a operation in it then we pop it
+		// and add it to the parents child
+		if(ctx.addOperation() != null || ctx.multiplyOperation() != null || ctx.subtractOperation() != null) {
+			popAndAddAsChild();
+		}
+	}
+
+	//Moved logic into the expression method
+	@Override
+	public void enterAddOperation(ICSSParser.AddOperationContext ctx) { }
+	@Override
+	public void exitAddOperation(ICSSParser.AddOperationContext ctx) { }
+	@Override
+	public void enterMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) { }
+	@Override
+	public void exitMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) { }
+
+
+
+//	@Override
 //	public void exitEveryRule(ParserRuleContext ctx) {
 //		popAndAddChild();
 //	}
 
-	private void popAndAddChild() {
+	private void popAndAddAsChild() {
 		ASTNode tag = currentContainer.pop();
 
 		if (!(tag  instanceof Stylesheet))

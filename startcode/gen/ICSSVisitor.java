@@ -64,21 +64,51 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitColorLiteral(ICSSParser.ColorLiteralContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ICSSParser#scalarLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitScalarLiteral(ICSSParser.ScalarLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#percentageLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPercentageLiteral(ICSSParser.PercentageLiteralContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ICSSParser#variableName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariableName(ICSSParser.VariableNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ICSSParser#variableValue}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVariableValue(ICSSParser.VariableValueContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ICSSParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariable(ICSSParser.VariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#multiplyOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiplyOperation(ICSSParser.MultiplyOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#addOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddOperation(ICSSParser.AddOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#subtractOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpression(ICSSParser.ExpressionContext ctx);
 }

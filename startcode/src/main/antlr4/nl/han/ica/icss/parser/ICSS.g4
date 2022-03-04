@@ -51,17 +51,47 @@ selector: LOWER_IDENT | CLASS_IDENT | ID_IDENT;
 object: selector OPEN_BRACE decleration+ CLOSE_BRACE;
 
 key: LOWER_IDENT COLON;
-value: pixelLiteral | colorLiteral | booleanLiteral | variableName;
-decleration: key value SEMICOLON;
+value: pixelLiteral | colorLiteral | booleanLiteral | variableName | scalarLiteral | percentageLiteral;
+decleration: key (value | expression) SEMICOLON;
 
 //variableLiteral: CAPITAL_IDENT;
 booleanLiteral: TRUE | FALSE;
 pixelLiteral: PIXELSIZE;
 colorLiteral: COLOR;
+scalarLiteral: SCALAR;
+percentageLiteral: PERCENTAGE;
+
 
 variableName: CAPITAL_IDENT;
-variableValue: value;
-variable: variableName ASSIGNMENT_OPERATOR variableValue SEMICOLON;
+//variableValue: value;
+variable: variableName ASSIGNMENT_OPERATOR value SEMICOLON;
+
+
+//PLUS: '+';
+//MIN: '-';
+//MUL: '*';
+//operationCandidate: pixelLiteral | variableName // | booleanLiteral
+//operation: PLUS | MIN | MUL;
+
+
+multiplyOperation: MUL;
+addOperation: PLUS;
+subtractOperation: MIN;
+expression: value | expression multiplyOperation expression | expression (addOperation | subtractOperation) expression; //doet multiply eerst // (value operation value) | (operation value);
+
+
+//ParWidth := 10px;
+//a {
+//    width: ParWidth + 2 * 10px;
+//}
+
+
+
+
+
+
+
+
 
 
 //LinkColor := #ff0000;
