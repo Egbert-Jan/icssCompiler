@@ -37,6 +37,16 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitObject(ICSSParser.ObjectContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ICSSParser#objectItem}.
+	 * @param ctx the parse tree
+	 */
+	void enterObjectItem(ICSSParser.ObjectItemContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#objectItem}.
+	 * @param ctx the parse tree
+	 */
+	void exitObjectItem(ICSSParser.ObjectItemContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ICSSParser#key}.
 	 * @param ctx the parse tree
 	 */
@@ -66,6 +76,26 @@ public interface ICSSListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDecleration(ICSSParser.DeclerationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ICSSParser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStatement(ICSSParser.IfStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStatement(ICSSParser.IfStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ICSSParser#elseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseStatement(ICSSParser.ElseStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#elseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseStatement(ICSSParser.ElseStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#booleanLiteral}.
 	 * @param ctx the parse tree

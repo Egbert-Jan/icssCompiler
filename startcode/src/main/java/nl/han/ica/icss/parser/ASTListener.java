@@ -199,12 +199,25 @@ public class ASTListener extends ICSSBaseListener {
 	@Override
 	public void exitMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) { }
 
+	@Override
+	public void enterIfStatement(ICSSParser.IfStatementContext ctx) {
+		currentContainer.push(new IfClause());
+	}
 
+	@Override
+	public void exitIfStatement(ICSSParser.IfStatementContext ctx) {
+		popAndAddAsChild();
+	}
 
-//	@Override
-//	public void exitEveryRule(ParserRuleContext ctx) {
-//		popAndAddChild();
-//	}
+	@Override
+	public void enterElseStatement(ICSSParser.ElseStatementContext ctx) {
+		currentContainer.push(new ElseClause());
+	}
+
+	@Override
+	public void exitElseStatement(ICSSParser.ElseStatementContext ctx) {
+		popAndAddAsChild();
+	}
 
 	private void popAndAddAsChild() {
 		ASTNode tag = currentContainer.pop();

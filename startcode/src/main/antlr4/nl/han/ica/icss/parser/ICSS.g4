@@ -48,11 +48,16 @@ ASSIGNMENT_OPERATOR: ':=';
 //stylesheet: EOF;
 stylesheet: variable* object*;
 selector: LOWER_IDENT | CLASS_IDENT | ID_IDENT;
-object: selector OPEN_BRACE decleration+ CLOSE_BRACE;
+object: selector OPEN_BRACE objectItem+ CLOSE_BRACE;
 
+objectItem: decleration | ifStatement; // | ifElseStatement ;
 key: LOWER_IDENT COLON;
 value: pixelLiteral | colorLiteral | booleanLiteral | variableName | scalarLiteral | percentageLiteral;
 decleration: key (value | expression) SEMICOLON;
+
+//ifElseStatement: ifStatement elseStatement; // https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687036/ANTLR+Cheat+Sheet
+ifStatement: IF BOX_BRACKET_OPEN variableName BOX_BRACKET_CLOSE OPEN_BRACE objectItem* CLOSE_BRACE elseStatement?;
+elseStatement: ELSE OPEN_BRACE decleration* CLOSE_BRACE;
 
 //variableLiteral: CAPITAL_IDENT;
 booleanLiteral: TRUE | FALSE;
@@ -65,14 +70,6 @@ percentageLiteral: PERCENTAGE;
 variableName: CAPITAL_IDENT;
 //variableValue: value;
 variable: variableName ASSIGNMENT_OPERATOR value SEMICOLON;
-
-
-//PLUS: '+';
-//MIN: '-';
-//MUL: '*';
-//operationCandidate: pixelLiteral | variableName // | booleanLiteral
-//operation: PLUS | MIN | MUL;
-
 
 multiplyOperation: MUL;
 addOperation: PLUS;

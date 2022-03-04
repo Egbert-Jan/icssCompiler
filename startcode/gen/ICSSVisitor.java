@@ -28,6 +28,12 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitObject(ICSSParser.ObjectContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ICSSParser#objectItem}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectItem(ICSSParser.ObjectItemContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ICSSParser#key}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -45,6 +51,18 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDecleration(ICSSParser.DeclerationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#ifStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(ICSSParser.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#elseStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElseStatement(ICSSParser.ElseStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#booleanLiteral}.
 	 * @param ctx the parse tree
