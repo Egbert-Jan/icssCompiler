@@ -72,10 +72,6 @@ public class Pipeline implements ANTLRErrorListener {
             walker.walk(listener, parseTree);
 
             this.ast = listener.getAST();
-
-            System.out.println("HIERISMIJNPRINT");
-            System.out.println(this.ast.toString());
-
         } catch (RecognitionException e) {
             this.ast = new AST();
             errors.add(e.getMessage());
