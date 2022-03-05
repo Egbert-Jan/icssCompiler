@@ -1,10 +1,7 @@
 package nl.han.ica.icss.checker;
 
-import nl.han.ica.datastructures.IHANLinkedList;
-import nl.han.ica.datastructures.impl.HANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
-import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +41,7 @@ public class Checker {
     private void recursivelyCheckNode(ASTNode node) {
 //        System.out.println(node.getNodeLabel());
 
-//        storeVariableType(node);
+        storeVariableType(node);
 
         checkIfClauseCondition(node);
 
@@ -65,16 +62,35 @@ public class Checker {
         variableScope.forEach(name -> { declaredVariablesForScope.remove(name); });
     }
 
-//    private void storeVariableType(ASTNode node) {
-//        if(node instanceof VariableAssignment) {
-//            var assignment = (VariableAssignment) node;
-//            declaredVariablesPerType.put(assignment.name.name, assignment.expression);
-//        }
-//    }
+    private void storeVariableType(ASTNode node) {
+        if(node instanceof VariableAssignment) {
+            var assignment = (VariableAssignment) node;
+            declaredVariablesPerType.put(assignment.name.name, assignment.expression);
+        }
+    }
 
-//    private Expression getVariableByName(String name) {
-//        return declaredVariablesPerType.get(name);
-//    }
+
+
+    private Expression getVariableValueByName(String name) {
+        return declaredVariablesPerType.get(name);
+    }
+
+    private Expression getVariableValueByExpression(Expression expression) {
+
+        if (expression instanceof VariableReference) {
+            var variable = (VariableReference) expression;
+
+            var variableValue = getVariableValueByName(variable.name);
+            if (variableValue instanceof BoolLiteral) {
+                return variableValue;
+            } else if(variableValue instanceof VariableReference) {
+                return getVariableValueByExpression(variableValue);
+            }
+        }
+
+        return null;
+    }
+
 
 
     private void checkIfDeclarationsHaveCorrectType(ASTNode node) {
@@ -136,11 +152,21 @@ public class Checker {
 //                }
 //            }
 
-            if(!(ifClause.conditionalExpression instanceof BoolLiteral))
+            if(!(ifClause.conditionalExpression instanceof BoolLiteral) && !(getVariableValueByExpression(ifClause.conditionalExpression) instanceof BoolLiteral))
                 node.setError("kut ding geen bool");
         }
     }
 
+
+//    MyVar := FALSE;
+//
+//    VarB := MyVar;
+//
+//    a {
+//        if[VarB] {
+//            height: 10px;
+//        }
+//    }
 
 
 //    private void recursivelyCheckNode(ASTNode node) {
