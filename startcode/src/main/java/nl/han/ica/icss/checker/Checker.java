@@ -42,15 +42,14 @@ public class Checker {
 //        System.out.println(node.getNodeLabel());
 
         storeVariableType(node);
-
         checkIfClauseCondition(node);
-
         checkIfColorsAreUsedInOperations(node);
-
         checkIfDeclarationsHaveCorrectType(node);
 
-        //Add variables to scope
+        //Store variables local scope
         ArrayList<String> variableScope = new ArrayList<>();
+
+        //Loop through the tree recursively
         node.getChildren().forEach(childNode -> {
 
             checkIfVariableIsInScope(childNode, variableScope);
@@ -59,16 +58,15 @@ public class Checker {
         });
 
         //Remove variables from scope
-        variableScope.forEach(name -> { declaredVariablesForScope.remove(name); });
+        variableScope.forEach(name -> declaredVariablesForScope.remove(name));
     }
 
     private void storeVariableType(ASTNode node) {
-        if(node instanceof VariableAssignment) {
+        if (node instanceof VariableAssignment) {
             var assignment = (VariableAssignment) node;
             declaredVariablesPerType.put(assignment.name.name, assignment.expression);
         }
     }
-
 
 
     private Expression getVariableValueByName(String name) {
@@ -83,31 +81,33 @@ public class Checker {
             var variableValue = getVariableValueByName(variable.name);
             if (variableValue instanceof Literal) {
                 return (Literal) variableValue;
-            } else if(variableValue instanceof VariableReference) {
+            } else if (variableValue instanceof VariableReference) {
                 return getVariableValueByExpression(variableValue);
             }
+        } else if (expression instanceof Literal) {
+            return (Literal) expression;
         }
 
         return null;
     }
 
 
-
+    //Logic should be moved to parser -> g4 file?
     private void checkIfDeclarationsHaveCorrectType(ASTNode node) {
         if (node instanceof Declaration) {
             var declaration = (Declaration) node;
 
             var propName = declaration.property.name.replace(":", ""); //Whyyyy is there a collonnnn???
-            var propValue = declaration.expression;
+            var propValue = getVariableValueByExpression(declaration.expression);
 
             var propIsColor = propName.equals(ICSSProperties.COLOR) || propName.equals(ICSSProperties.BACKGROUND_COLOR);
-            if(propIsColor && !(propValue instanceof ColorLiteral)) {
+            if (propIsColor && !(propValue instanceof ColorLiteral)) {
                 node.setError("Color property can only have a color as value");
                 return;
             }
 
             var propIsSize = propName.equals(ICSSProperties.WIDTH) || propName.equals(ICSSProperties.HEIGHT);
-            if(propIsSize && !(propValue instanceof PercentageLiteral) && !(propValue instanceof PixelLiteral) && !(propValue instanceof ScalarLiteral)) {
+            if (propIsSize && !(propValue instanceof PercentageLiteral) && !(propValue instanceof PixelLiteral) && !(propValue instanceof ScalarLiteral)) {
                 node.setError("Size must be a percentage, pixel, or scalar value");
             }
 
@@ -118,14 +118,14 @@ public class Checker {
         if (node instanceof Operation) {
             var operation = (Operation) node;
 
-            if(operation.lhs instanceof ColorLiteral || operation.rhs instanceof ColorLiteral) {
+            if (operation.lhs instanceof ColorLiteral || operation.rhs instanceof ColorLiteral) {
                 node.setError("Operation can not include colors");
             }
         }
     }
 
     private void checkIfVariableIsInScope(ASTNode childNode, ArrayList<String> variableScope) {
-        if(childNode instanceof VariableAssignment) {
+        if (childNode instanceof VariableAssignment) {
             var variable = (VariableAssignment) childNode;
             declaredVariablesForScope.put(variable.name.name, variable);
             variableScope.add(variable.name.name);
@@ -141,74 +141,23 @@ public class Checker {
 
     private void checkIfClauseCondition(ASTNode node) {
         //TODO: Check if it's a variable it's also a bool
-        if(node instanceof IfClause) {
+        if (node instanceof IfClause) {
             var ifClause = (IfClause) node;
 
-//            if (ifClause.conditionalExpression instanceof VariableReference) {
-//                var variable = (VariableReference) ifClause.conditionalExpression;
-//                if (!(getVariableByName(variable.name) instanceof BoolLiteral)) {
-//                    node.setError("kut ding geen bool");
-//                    return;
-//                }
-//            }
-
-            if(!(ifClause.conditionalExpression instanceof BoolLiteral) && !(getVariableValueByExpression(ifClause.conditionalExpression) instanceof BoolLiteral))
+            if (!(ifClause.conditionalExpression instanceof BoolLiteral) && !(getVariableValueByExpression(ifClause.conditionalExpression) instanceof BoolLiteral))
                 node.setError("kut ding geen bool");
         }
     }
-
-//
-//    MyVar := FALSE;
-//
-//    VarB := MyVar;
-//
-//    a {
-//        if[VarB] {
-//            height: 10px;
-//        }
-//    }
-
-
-//    private void recursivelyCheckNode(ASTNode node) {
-//        System.out.println(node.getNodeLabel());
-//
-//        if (node instanceof VariableReference) {
-//            var variable = (VariableReference) node;
-//            if(!variables.containsKey(variable.name)) {
-//                node.setError("Variable '"+variable.name+"' out of scope or not declared");
-//            }
-//        }
-//
-//        if(node instanceof VariableAssignment) {
-//            //Sla node op
-//            var variable = (VariableAssignment) node;
-//            var name = variable.name.name;
-//
-//            System.out.println("name: " + name);
-//            variables.put(name, variable);
-//            node.getChildren().forEach(this::recursivelyCheckNode);
-//            variables.remove(name);
-//
-//            return;
-//        }
-//
-//
-//
-//        node.getChildren().forEach(this::recursivelyCheckNode);
-//    }
 }
 
+//MyVar := FALSE;
 //
-//    a {
-//        BroHeight := 100px;
-//    }
+//VarB := MyVar;
 //
-//    p {
-//        width: BroHeight;
+//VarC := 10px;
+//
+//a {
+//    if[VarB] {
+//        height: VarC;
 //    }
-
-
-// Maybe better to do this in the parser???
-class AllowedDeclarations {
-
-}
+//}
