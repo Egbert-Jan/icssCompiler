@@ -75,14 +75,14 @@ public class Checker {
         return declaredVariablesPerType.get(name);
     }
 
-    private Expression getVariableValueByExpression(Expression expression) {
+    private Literal getVariableValueByExpression(Expression expression) {
 
         if (expression instanceof VariableReference) {
             var variable = (VariableReference) expression;
 
             var variableValue = getVariableValueByName(variable.name);
-            if (variableValue instanceof BoolLiteral) {
-                return variableValue;
+            if (variableValue instanceof Literal) {
+                return (Literal) variableValue;
             } else if(variableValue instanceof VariableReference) {
                 return getVariableValueByExpression(variableValue);
             }
@@ -157,7 +157,7 @@ public class Checker {
         }
     }
 
-
+//
 //    MyVar := FALSE;
 //
 //    VarB := MyVar;
