@@ -3,6 +3,7 @@ package nl.han.ica.icss.checker;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public class Checker {
 
     public void check(AST ast) {
 //        variableTypes = new HANLinkedList<>();
-        System.out.println(ast.toString());
+//        System.out.println(ast.toString());
         recursivelyCheckNode(ast.root);
     }
 
@@ -86,11 +87,64 @@ public class Checker {
             }
         } else if (expression instanceof Literal) {
             return (Literal) expression;
+        } else if(expression instanceof Operation) {
+            return getLiteralFromOperation((Operation) expression);
         }
 
         return null;
     }
 
+    private Literal getLiteralFromOperation(Operation operation) {
+        var left = operation.lhs;
+        var right = operation.rhs;
+
+        Literal leftLiteral;
+        Literal rightLiteral;
+
+        if (left instanceof VariableReference) {
+            left = getVariableValueByExpression(left);
+        }
+
+        if (right instanceof VariableReference) {
+            right = getVariableValueByExpression(right);
+        }
+
+        if (left instanceof BoolLiteral || right instanceof BoolLiteral)
+            operation.setError("Bool is invalid operation");
+
+        if (left instanceof ColorLiteral || right instanceof ColorLiteral)
+            operation.setError("Color is an invalid operation");
+
+
+        if (left instanceof Operation) {
+            left = getLiteralFromOperation((Operation) left);
+        }
+
+        if (right instanceof Operation) {
+            right = getLiteralFromOperation((Operation) right);
+        }
+
+        //DOES ONLY RETURN CORRECT LITERAL TYPE. ONLY FOR CHECKING TYPEEEE
+
+        if (left instanceof PixelLiteral && (right instanceof PixelLiteral || right instanceof ScalarLiteral))
+            return (PixelLiteral) left;
+
+        if (right instanceof PixelLiteral && (left instanceof PixelLiteral || left instanceof ScalarLiteral))
+            return (PixelLiteral) right;
+
+
+        if (left instanceof PercentageLiteral && (right instanceof PercentageLiteral || right instanceof ScalarLiteral))
+            return (PercentageLiteral) left;
+
+        if (right instanceof PercentageLiteral && (left instanceof PercentageLiteral || left instanceof ScalarLiteral))
+            return (PercentageLiteral) right;
+
+
+        return null;
+    }
+//    div {
+//        width: 50px + 2 * 10px - 2px;
+//    }
 
     //Logic should be moved to parser -> g4 file?
     private void checkIfDeclarationsHaveCorrectType(ASTNode node) {
@@ -107,7 +161,11 @@ public class Checker {
             }
 
             var propIsSize = propName.equals(ICSSProperties.WIDTH) || propName.equals(ICSSProperties.HEIGHT);
-            if (propIsSize && !(propValue instanceof PercentageLiteral) && !(propValue instanceof PixelLiteral) && !(propValue instanceof ScalarLiteral)) {
+            if (propIsSize &&
+                    !(propValue instanceof PercentageLiteral
+                    || propValue instanceof PixelLiteral
+                    || propValue instanceof ScalarLiteral) //Scalar should be removed it's not allowed
+            ) {
                 node.setError("Size must be a percentage, pixel, or scalar value");
             }
 
@@ -140,7 +198,6 @@ public class Checker {
     }
 
     private void checkIfClauseCondition(ASTNode node) {
-        //TODO: Check if it's a variable it's also a bool
         if (node instanceof IfClause) {
             var ifClause = (IfClause) node;
 
