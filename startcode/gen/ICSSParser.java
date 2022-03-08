@@ -1046,8 +1046,8 @@ public class ICSSParser extends Parser {
 			return getRuleContext(VariableNameContext.class,0);
 		}
 		public TerminalNode ASSIGNMENT_OPERATOR() { return getToken(ICSSParser.ASSIGNMENT_OPERATOR, 0); }
-		public ValueContext value() {
-			return getRuleContext(ValueContext.class,0);
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
 		public TerminalNode SEMICOLON() { return getToken(ICSSParser.SEMICOLON, 0); }
 		public VariableContext(ParserRuleContext parent, int invokingState) {
@@ -1080,7 +1080,7 @@ public class ICSSParser extends Parser {
 			setState(128);
 			match(ASSIGNMENT_OPERATOR);
 			setState(129);
-			value();
+			expression(0);
 			setState(130);
 			match(SEMICOLON);
 			}
@@ -1402,7 +1402,7 @@ public class ICSSParser extends Parser {
 		"\2\2st\7\23\2\2t\23\3\2\2\2uv\t\3\2\2v\25\3\2\2\2wx\7\t\2\2x\27\3\2\2"+
 		"\2yz\7\f\2\2z\31\3\2\2\2{|\7\13\2\2|\33\3\2\2\2}~\7\n\2\2~\35\3\2\2\2"+
 		"\177\u0080\7\20\2\2\u0080\37\3\2\2\2\u0081\u0082\5\36\20\2\u0082\u0083"+
-		"\7\31\2\2\u0083\u0084\5\f\7\2\u0084\u0085\7\24\2\2\u0085!\3\2\2\2\u0086"+
+		"\7\31\2\2\u0083\u0084\5(\25\2\u0084\u0085\7\24\2\2\u0085!\3\2\2\2\u0086"+
 		"\u0087\7\30\2\2\u0087#\3\2\2\2\u0088\u0089\7\26\2\2\u0089%\3\2\2\2\u008a"+
 		"\u008b\7\27\2\2\u008b\'\3\2\2\2\u008c\u008d\b\25\1\2\u008d\u008e\5\f\7"+
 		"\2\u008e\u009c\3\2\2\2\u008f\u0090\f\4\2\2\u0090\u0091\5\"\22\2\u0091"+

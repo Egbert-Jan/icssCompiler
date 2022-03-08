@@ -84,10 +84,9 @@ public class Evaluator implements Transform {
                 return (Literal) variableValue;
             } else if (variableValue instanceof VariableReference) {
                 return getVariableValueByExpression(variableValue);
+            } else if(variableValue instanceof Operation) {
+                return getLiteralFromOperation((Operation) variableValue);
             }
-//            else if(variableValue instanceof Operation) {
-//                return getLiteralFromOperation((Operation) variableValue);
-//            }
         } else if (expression instanceof Literal) {
             return (Literal) expression;
         } else if(expression instanceof Operation) {

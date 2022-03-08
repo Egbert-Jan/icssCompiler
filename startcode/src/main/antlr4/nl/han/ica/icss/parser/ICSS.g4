@@ -69,7 +69,7 @@ percentageLiteral: PERCENTAGE;
 
 variableName: CAPITAL_IDENT;
 //variableValue: value;
-variable: variableName ASSIGNMENT_OPERATOR value SEMICOLON;
+variable: variableName ASSIGNMENT_OPERATOR expression SEMICOLON;
 
 multiplyOperation: MUL;
 addOperation: PLUS;
