@@ -57,7 +57,7 @@ decleration: key (value | expression) SEMICOLON;
 
 //ifElseStatement: ifStatement elseStatement; // https://theantlrguy.atlassian.net/wiki/spaces/ANTLR3/pages/2687036/ANTLR+Cheat+Sheet
 ifStatement: IF BOX_BRACKET_OPEN (variableName | booleanLiteral) BOX_BRACKET_CLOSE OPEN_BRACE objectItem* CLOSE_BRACE elseStatement?;
-elseStatement: ELSE OPEN_BRACE decleration* CLOSE_BRACE;
+elseStatement: ELSE OPEN_BRACE objectItem* CLOSE_BRACE;
 
 //variableLiteral: CAPITAL_IDENT;
 booleanLiteral: TRUE | FALSE;

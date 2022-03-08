@@ -714,11 +714,11 @@ public class ICSSParser extends Parser {
 		public TerminalNode ELSE() { return getToken(ICSSParser.ELSE, 0); }
 		public TerminalNode OPEN_BRACE() { return getToken(ICSSParser.OPEN_BRACE, 0); }
 		public TerminalNode CLOSE_BRACE() { return getToken(ICSSParser.CLOSE_BRACE, 0); }
-		public List<DeclerationContext> decleration() {
-			return getRuleContexts(DeclerationContext.class);
+		public List<ObjectItemContext> objectItem() {
+			return getRuleContexts(ObjectItemContext.class);
 		}
-		public DeclerationContext decleration(int i) {
-			return getRuleContext(DeclerationContext.class,i);
+		public ObjectItemContext objectItem(int i) {
+			return getRuleContext(ObjectItemContext.class,i);
 		}
 		public ElseStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -753,11 +753,11 @@ public class ICSSParser extends Parser {
 			setState(110);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==LOWER_IDENT) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << LOWER_IDENT) | (1L << CAPITAL_IDENT))) != 0)) {
 				{
 				{
 				setState(107);
-				decleration();
+				objectItem();
 				}
 				}
 				setState(112);
@@ -1398,10 +1398,10 @@ public class ICSSParser extends Parser {
 		"\2\\^\5\24\13\2][\3\2\2\2]\\\3\2\2\2^_\3\2\2\2_`\7\6\2\2`d\7\22\2\2ac"+
 		"\5\b\5\2ba\3\2\2\2cf\3\2\2\2db\3\2\2\2de\3\2\2\2eg\3\2\2\2fd\3\2\2\2g"+
 		"i\7\23\2\2hj\5\22\n\2ih\3\2\2\2ij\3\2\2\2j\21\3\2\2\2kl\7\4\2\2lp\7\22"+
-		"\2\2mo\5\16\b\2nm\3\2\2\2or\3\2\2\2pn\3\2\2\2pq\3\2\2\2qs\3\2\2\2rp\3"+
-		"\2\2\2st\7\23\2\2t\23\3\2\2\2uv\t\3\2\2v\25\3\2\2\2wx\7\t\2\2x\27\3\2"+
-		"\2\2yz\7\f\2\2z\31\3\2\2\2{|\7\13\2\2|\33\3\2\2\2}~\7\n\2\2~\35\3\2\2"+
-		"\2\177\u0080\7\20\2\2\u0080\37\3\2\2\2\u0081\u0082\5\36\20\2\u0082\u0083"+
+		"\2\2mo\5\b\5\2nm\3\2\2\2or\3\2\2\2pn\3\2\2\2pq\3\2\2\2qs\3\2\2\2rp\3\2"+
+		"\2\2st\7\23\2\2t\23\3\2\2\2uv\t\3\2\2v\25\3\2\2\2wx\7\t\2\2x\27\3\2\2"+
+		"\2yz\7\f\2\2z\31\3\2\2\2{|\7\13\2\2|\33\3\2\2\2}~\7\n\2\2~\35\3\2\2\2"+
+		"\177\u0080\7\20\2\2\u0080\37\3\2\2\2\u0081\u0082\5\36\20\2\u0082\u0083"+
 		"\7\31\2\2\u0083\u0084\5\f\7\2\u0084\u0085\7\24\2\2\u0085!\3\2\2\2\u0086"+
 		"\u0087\7\30\2\2\u0087#\3\2\2\2\u0088\u0089\7\26\2\2\u0089%\3\2\2\2\u008a"+
 		"\u008b\7\27\2\2\u008b\'\3\2\2\2\u008c\u008d\b\25\1\2\u008d\u008e\5\f\7"+

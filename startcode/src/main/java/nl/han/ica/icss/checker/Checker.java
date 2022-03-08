@@ -34,7 +34,7 @@ public class Checker {
 
     public void check(AST ast) {
 //        variableTypes = new HANLinkedList<>();
-//        System.out.println(ast.toString());
+        System.out.println(ast.toString());
         recursivelyCheckNode(ast.root);
     }
 
@@ -163,8 +163,7 @@ public class Checker {
             var propIsSize = propName.equals(ICSSProperties.WIDTH) || propName.equals(ICSSProperties.HEIGHT);
             if (propIsSize &&
                     !(propValue instanceof PercentageLiteral
-                    || propValue instanceof PixelLiteral
-                    || propValue instanceof ScalarLiteral) //Scalar should be removed it's not allowed
+                    || propValue instanceof PixelLiteral)
             ) {
                 node.setError("Size must be a percentage, pixel, or scalar value");
             }
@@ -185,8 +184,10 @@ public class Checker {
     private void checkIfVariableIsInScope(ASTNode childNode, ArrayList<String> variableScope) {
         if (childNode instanceof VariableAssignment) {
             var variable = (VariableAssignment) childNode;
-            declaredVariablesForScope.put(variable.name.name, variable);
-            variableScope.add(variable.name.name);
+            if(!declaredVariablesForScope.containsKey(variable.name.name)) {
+                declaredVariablesForScope.put(variable.name.name, variable);
+                variableScope.add(variable.name.name);
+            }
         }
 
         if (childNode instanceof VariableReference) {
