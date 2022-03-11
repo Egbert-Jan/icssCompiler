@@ -34,7 +34,7 @@ public class Checker {
 
     public void check(AST ast) {
 //        variableTypes = new HANLinkedList<>();
-        System.out.println(ast.toString());
+//        System.out.println(ast.toString());
         recursivelyCheckNode(ast.root);
     }
 
@@ -99,9 +99,6 @@ public class Checker {
     private Literal getLiteralFromOperation(Operation operation) {
         var left = operation.lhs;
         var right = operation.rhs;
-
-        Literal leftLiteral;
-        Literal rightLiteral;
 
         if (left instanceof VariableReference) {
             left = getVariableValueByExpression(left);

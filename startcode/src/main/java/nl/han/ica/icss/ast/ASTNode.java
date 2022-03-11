@@ -35,6 +35,7 @@ public class ASTNode {
     * By implementing this method you can easily make transformations that prune the AST.
     */
     public ASTNode removeChild(ASTNode child) {
+
         return this;
     }
 

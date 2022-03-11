@@ -7,7 +7,11 @@ import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 
+import javax.swing.text.Style;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 //div {
@@ -23,6 +27,29 @@ import java.util.LinkedList;
 //    height: MyVar;
 //    width: 10 + 20px;
 //}
+
+
+//AdjustWidth := TRUE;
+//WidthVar := 0px;
+//
+//p {
+//if [AdjustWidth] {
+//    height: 100px;
+//    WidthVar := 200px;
+//} else {
+//    WidthVar := 250px;
+//}
+//
+//    width: WidthVar;
+//}
+//
+//
+//a {
+//    height: 100px;
+//    width: 10px;
+//}
+
+
 public class Evaluator implements Transform {
 
     private IHANLinkedList<HashMap<String, Literal>> variableValues;//variableValues = new HANLinkedList<>();
@@ -36,41 +63,59 @@ public class Evaluator implements Transform {
 
     @Override
     public void apply(AST ast) {
-//        variableValues = new HANLinkedList<>();
         System.out.println(ast);
-
         recursivelyCheckTree(ast.root);
-
         System.out.println(ast);
-//        expressionsToReplace.forEach((a, b) -> {
-//            var ast.root.removeChild(a);
-//        });
-//        var node = ast.root.removeChild(expressionsToReplace.get((Expression) ast.root.getChildren().get(0)));
-//        ast.root = node.getChildren().get(0);
     }
 
     private void recursivelyCheckTree(ASTNode node) {
         storeVariableTypeIfAssignment(node);
-
-        transformReassignments(node);
         transformExpressionWithLiteral(node);
 
-        node.getChildren().forEach(childNode -> {
+
+        var index = 0;
+        for (ASTNode childNode : node.getChildren()) {
+            if (childNode instanceof IfClause) {
+                var ifClause = (IfClause) childNode;
+                ifClause.conditionalExpression = getVariableValueByExpression(ifClause.conditionalExpression);
+
+                ArrayList<ASTNode> itemsToAdd = new ArrayList<>();
+
+                var ifExpressionCondition = ((BoolLiteral) ifClause.conditionalExpression).value;
+                if (ifExpressionCondition) {
+                    if (ifClause.elseClause != null) {
+                        ifClause.elseClause.body = new ArrayList<>();
+                    }
+                    itemsToAdd.addAll(ifClause.body);
+                } else {
+                    ifClause.body = new ArrayList<>();
+                    if (ifClause.elseClause != null) {
+                        itemsToAdd.addAll(ifClause.elseClause.body);
+                    }
+                }
+
+                if (node instanceof Stylerule) {
+                    //Add to parent
+                    // .stream().filter()
+                    ((Stylerule) node).body.addAll(index, itemsToAdd);
+                    ((Stylerule) node).body.remove(childNode);
+
+                } else if (node instanceof IfClause) {
+                    ((IfClause) node).body.remove(ifClause);
+                }
+
+                //Check parent again
+                recursivelyCheckTree(node);
+            }
+
             recursivelyCheckTree(childNode);
-        });
-    }
-
-    public void transformReassignments(ASTNode node) {
-
+            index++;
+        }
     }
 
     public void transformExpressionWithLiteral(ASTNode node) {
         if(node instanceof Declaration) {
             var declaration = (Declaration) node;
-//            if(declaration.expression instanceof VariableReference) {
-//                declaration.expression = getVariableValueByExpression(declaration.expression);
-//            }
-//
             declaration.expression = getVariableValueByExpression(declaration.expression);
         }
     }
