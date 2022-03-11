@@ -63,9 +63,7 @@ public class Evaluator implements Transform {
 
     @Override
     public void apply(AST ast) {
-        System.out.println(ast);
         recursivelyCheckTree(ast.root);
-        System.out.println(ast);
     }
 
     private void recursivelyCheckTree(ASTNode node) {
