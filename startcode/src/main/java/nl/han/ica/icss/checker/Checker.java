@@ -65,6 +65,15 @@ public class Checker {
     private void storeVariableType(ASTNode node) {
         if (node instanceof VariableAssignment) {
             var assignment = (VariableAssignment) node;
+            if(declaredVariablesPerType.containsKey(assignment.name.name)) {
+                var literal = getVariableValueByExpression(declaredVariablesPerType.get(assignment.name.name));
+                var rightLiteral = getVariableValueByExpression(assignment.expression);
+                if (!literal.getClass().equals(rightLiteral.getClass())) {
+                    assignment.setError("Can't assign a value of type " + rightLiteral.getClass() + " to a variable of type " + literal.getClass());
+                    return;
+                }
+            }
+
             declaredVariablesPerType.put(assignment.name.name, assignment.expression);
         }
     }

@@ -29,9 +29,16 @@ public class Generator {
 						.append(child)
 						.append(" {")
 						.append(System.lineSeparator());
+
+				//If there are no children add closing tag directly
+				if(node.getChildren().stream().filter(n -> n instanceof Declaration).count() < 1) {
+					stringBuilder
+							.append("}")
+							.append(System.lineSeparator().repeat(2));
+				}
 			} else if(child instanceof Declaration) {
 				stringBuilder
-						.append("\t".repeat(Math.max(0, indent)))
+						.append("  ".repeat(Math.max(0, indent)))
 						.append(generateDecleration((Declaration) child))
 						.append(System.lineSeparator());
 
