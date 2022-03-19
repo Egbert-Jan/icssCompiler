@@ -211,7 +211,7 @@ public class Checker {
             var ifClause = (IfClause) node;
 
             if (!(ifClause.conditionalExpression instanceof BoolLiteral) && !(getVariableValueByExpression(ifClause.conditionalExpression) instanceof BoolLiteral))
-                node.setError("kut ding geen bool");
+                node.setError("If clause condition is not a boolean");
         }
     }
 }
