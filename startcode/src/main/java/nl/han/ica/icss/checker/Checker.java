@@ -53,6 +53,12 @@ public class Checker {
         //Loop through the tree recursively
         node.getChildren().forEach(childNode -> {
 
+            if (childNode instanceof ElseClause) {
+                for (String name : variableScope) {
+                    declaredVariablesForScope.remove(name);
+                }
+            }
+
             checkIfVariableIsInScope(childNode, variableScope);
 
             recursivelyCheckNode(childNode);
